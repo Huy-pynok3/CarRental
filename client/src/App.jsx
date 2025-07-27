@@ -4,6 +4,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import { Home, Car, CarDetails, MyBooking } from "./pages";
 import Footer from '@/components/Footer'
 import { AddCar, Dashboard, Layout, ManageBookings, ManageCars } from "./pages/owner";
+import Login from "./components/Login";
 
 const App = () => {
 
@@ -12,6 +13,7 @@ const App = () => {
     
     return (
         <>
+            {showLogin && <Login setShowLogin={setShowLogin} />}
             { !isOwnerPath && <Navbar setShowLogin={setShowLogin}/>}
 
             <Routes>
