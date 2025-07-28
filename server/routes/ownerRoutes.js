@@ -19,7 +19,7 @@ ownerRouter.get("/cars", protect, getOwnerCars);
 ownerRouter.post("/toggle-car", protect, toggleCarAvailability);
 ownerRouter.post("/delete-car", protect, deleteCar);
 
-ownerRouter.get("/dashborad", protect, getDashboadData);
+ownerRouter.get("/dashboard", protect, getDashboadData);
 ownerRouter.post("/update-image", upload.single("image"), protect, updateUserImage);
 
 export default ownerRouter;

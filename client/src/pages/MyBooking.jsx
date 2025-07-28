@@ -1,17 +1,29 @@
-import { assets, dummyMyBookingsData } from "@/assets/assets";
+import { assets } from "@/assets/assets";
 import Title from "@/components/Title";
+import { useAppContext } from "@/context/AppContext";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const MyBooking = () => {
+
+    const { axios, user} = useAppContext()
+
     const [bookings, setBookings] = useState([]);
     const currency = import.meta.env.VITE_CURRENCY;
+
     const fetchBooking = async () => {
-        setBookings(dummyMyBookingsData);
+        try {
+            const {data} = await axios.get('/api/bookings/user')
+            data.success ? setBookings(data.bookings) : toast.error(data.message)
+
+        } catch (error) {
+            toast.error(error.message)
+        }
     };
 
     useEffect(() => {
-        fetchBooking();
-    }, []);
+        user && fetchBooking();
+    }, [user]);
 
     return (
         <div className="px-6 md:px-16 lg:px-24 xl:px-32 2xl:px-48 mt-16 text-sm max-w-7xl">
@@ -49,7 +61,7 @@ const MyBooking = () => {
                             <div className="flex items-start gap-2 mt-3">
                                 <img src={assets.calendar_icon_colored} className="w-4 h-4 mt-1" alt="" />
                                 <div>
-                                    <p class="text-gray-500">Rental Period</p>
+                                    <p className="text-gray-500">Rental Period</p>
                                     <p>
                                         {new Date(booking.pickupDate).toLocaleDateString()} -{" "}
                                         {new Date(booking.returnDate).toLocaleDateString()}
@@ -68,7 +80,7 @@ const MyBooking = () => {
                         <div className="md:col-span-1 flex flex-col justify-between gap-6">
                             <div className="text-sm text-gray-500 text-right">
                                 <p>Total Price</p>
-                                <h1 class="text-2xl font-semibold text-primary">{currency} {booking.price}</h1>
+                                <h1 className="text-2xl font-semibold text-primary">{currency} {booking.price}</h1>
                                 <p>Booked on {new Date(booking.pickupDate).toLocaleDateString()}</p>
                             </div>
                         </div>

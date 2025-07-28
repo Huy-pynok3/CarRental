@@ -1,15 +1,30 @@
-import { assets, dummyUserData, ownerMenuLinks } from "@/assets/assets";
+import { assets, ownerMenuLinks } from "@/assets/assets";
+import { useAppContext } from "@/context/AppContext";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { NavLink, useLocation } from "react-router-dom";
 
 const Sidebar = () => {
-    const user = dummyUserData;
+    const { user, axios, fetchUser } = useAppContext();
     const location = useLocation();
     const [image, setImage] = useState("");
 
-    const updateImage = (e) => {
-        user.image = URL.createObjectURL(image);
-        setImage("");
+    const updateImage = async () => {
+        try {
+            const formData = new FormData();
+            formData.append("image", image);
+
+            const { data } = await axios.post("api/owner/update-image", formData);
+            if (data.success) {
+                fetchUser();
+                toast.success(data.message);
+                setImage("");
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+        }
     };
 
     return (
@@ -40,18 +55,28 @@ const Sidebar = () => {
                 </label>
             </div>
             {image && (
-                <button className="absolute top-0 right-0 flex p-2 gap-1 bg-primary/10 text-primary cursor-pointer">
-                    Save <img src={assets.check_icon} width={13} alt="" onClick={updateImage} />
+                <button onClick={updateImage} className="absolute top-0 right-0 flex p-2 gap-1 bg-primary/10 text-primary cursor-pointer">
+                    Save <img src={assets.check_icon} width={13} alt=""/>
                 </button>
             )}
             <p className="mt-2 text-base max-md:hidden">{user?.name}</p>
 
             <div className="w-full">
-                {ownerMenuLinks.map((link, i) =>(
-                    <NavLink key={i} to={link.path} className={`relative flex items-center gap-2 w-full py-3 pl-4 first:mt-6 ${link.path === location.pathname ? 'bg-primary/10 text-primary' : 'text-gray-600'}`}>
+                {ownerMenuLinks.map((link, i) => (
+                    <NavLink
+                        key={i}
+                        to={link.path}
+                        className={`relative flex items-center gap-2 w-full py-3 pl-4 first:mt-6 ${
+                            link.path === location.pathname ? "bg-primary/10 text-primary" : "text-gray-600"
+                        }`}
+                    >
                         <img src={link.path === location.pathname ? link.coloredIcon : link.icon} alt="car icon" />
                         <span className="max-md:hidden">{link.name}</span>
-                        <div className={`${link.path === location.pathname && 'bg-primary'} w-1.5 h-8 rounded-l right-0 absolute`}></div>
+                        <div
+                            className={`${
+                                link.path === location.pathname && "bg-primary"
+                            } w-1.5 h-8 rounded-l right-0 absolute`}
+                        ></div>
                     </NavLink>
                 ))}
             </div>

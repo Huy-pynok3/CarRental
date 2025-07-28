@@ -14,15 +14,16 @@ import User from '../models/User.js';
     try {
         const userId = jwt.verify(token, process.env.JWT_SECRET);
 
-        if(!userId) return res.json({
-            success: false,
-            message: "Not authorized"
-        });
+        if(!userId) { 
+            return res.json({
+                success: false,
+                message: "Not authorized"
+            });
+        }
         req.user = await User.findById(userId).select("-password");
         next();
 
     } catch (error) {
-        console.error("Error in authentication middleware:", error.message);
         return res.json({
             success: false,
             message: "Server error"

@@ -72,7 +72,7 @@ export const toggleCarAvailability = async (req, res) => {
     try {
         const { _id } = req.user;
         const { carId } = req.body;
-        const car = await Car.find(carId);
+        const car = await Car.findById(carId);
 
         //Checking is car belongs to the user
         if (car.owner.toString() !== _id.toString()) {
@@ -83,8 +83,8 @@ export const toggleCarAvailability = async (req, res) => {
 
         res.json({ success: true, message: "Availability toggled" });
     } catch (error) {
-        console.log(error.mesage);
-        res.json({ success: false, message: error.mesage });
+        console.log(error.message);
+        res.json({ success: false, message: error.message });
     }
 };
 
@@ -93,7 +93,7 @@ export const deleteCar = async (req, res) => {
     try {
         const { _id } = req.user;
         const { carId } = req.body;
-        const car = await Car.find(carId);
+        const car = await Car.findById(carId);
 
         //Checking is car belongs to the user
         if (car.owner.toString() !== _id.toString()) {
@@ -106,8 +106,8 @@ export const deleteCar = async (req, res) => {
 
         res.json({ success: true, message: "Car Removed" });
     } catch (error) {
-        console.log(error.mesage);
-        res.json({ success: false, message: error.mesage });
+        console.log(error.message);
+        res.json({ success: false, message: error.message });
     }
 };
 
@@ -139,6 +139,7 @@ export const getDashboadData = async (req, res) => {
             recentBookings: bookings.slice(0, 3),
             monthlyRevenue,
         };
+        res.json({ success: true , dashboardData })
     } catch (error) {
         console.log(error.mesage);
         res.json({ success: false, message: error.mesage });
