@@ -4,7 +4,8 @@ import { useAppContext } from "@/context/AppContext";
 import React from "react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import {motion} from 'motion/react'
 
 const CarDetails = () => {
     const { id } = useParams();
@@ -45,13 +46,24 @@ const CarDetails = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
                 {/* Left: Car Img & Details */}
-                <div className="lg:col-span-2">
-                    <img
+                <motion.div 
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="lg:col-span-2">
+                    <motion.img
+                        initial={{ opacity: 0, scale: 0.98 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5 }}                        
                         src={car.image}
                         alt=""
                         className="w-full h-auto md:max-h-100 object-cover rounded-xl mb-6 shadow-md"
                     />
-                    <div className="space-y-6">
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1}}
+                        transition={{ duration: 0.5, delay: 0.2 }}                    
+                        className="space-y-6">
                         <div>
                             <h1 className="text-3xl font-bold">
                                 {car.brand} {car.model}
@@ -69,10 +81,14 @@ const CarDetails = () => {
                                 { icon: assets.car_icon, text: `${car.transmission}` },
                                 { icon: assets.location_icon, text: `${car.location}` },
                             ].map(({ icon, text }) => (
-                                <div key={text} className="flex flex-col items-center bg-light p-4 rounded-lg">
+                                <motion.div 
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.4 }}                                    
+                                    key={text} className="flex flex-col items-center bg-light p-4 rounded-lg">
                                     <img src={icon} alt="" className="h-5 mb-2" />
                                     {text}
-                                </div>
+                                </motion.div>
                             ))}
                         </div>
 
@@ -92,11 +108,14 @@ const CarDetails = () => {
                                 ))}
                             </ul>
                         </div>
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
 
                 {/* Right Booking form */}
-                <form
+                <motion.form
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.3 }}                    
                     onSubmit={handleSubmit}
                     className="shadow-lg h-max sticky top-18 rounded-xl p-6 space-y-6 text-gray-500"
                 >
@@ -136,7 +155,7 @@ const CarDetails = () => {
                         Book Now
                     </button>
                     <p className="text-center text-sm">No credit card required to reserve</p>
-                </form>
+                </motion.form>
             </div>
         </div>
     ) : (
